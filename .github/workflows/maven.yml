@@ -41,7 +41,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
   Deploy:
-    needs: Build
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: deploy
@@ -53,7 +53,7 @@ jobs:
           script: |
             docker stop be-web
             docker rm be-web
-            docker rmi ${{secrets.DOCKER_USERNAME}}/money-manager-container:latest
-            docker run -d -p 8080:8080 --name be-web ${{secrets.DOCKER_USERNAME}}/money-manager-container:latest
+            docker rmi nhatkhuong/money-manager-container:latest
+            docker run -d -p 8080:8080 --name be-web nhatkhuong/money-manager-container:latest
 
 
