@@ -1,4 +1,5 @@
 FROM openjdk:17
-EXPOSE 8080
-ADD target/money-manager-container.jar money-manager-container.jar
-ENTRYPOINT ["java","-jar","/money-manager-container.jar"]
+RUN mkdir /code
+WORKDIR /code
+COPY target/money-manager-container.jar /code
+ENTRYPOINT ["java","-jar","money-manager-container.jar"]
