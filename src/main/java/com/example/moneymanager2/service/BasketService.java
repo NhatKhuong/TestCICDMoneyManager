@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -74,5 +75,51 @@ public class BasketService {
 
     public List<Basket> findAllByUserIdAndTpe(String userId, int type){
         return basketRepository.findAllByUserIdAndType(userId,type);
+    }
+
+    public List<Double> getListAsset(String userId){
+        List<Double> lstResult = new ArrayList<>();
+        List<Basket> lstAsset = basketRepository.findAllByUserIdAndType(userId,4);
+        List<Basket> lstDream = basketRepository.findAllByUserIdAndType(userId,3);
+        List<Basket> lstBasket = basketRepository.findAllByUserIdAndType(userId,1);
+        List<Basket> lstDebt = basketRepository.findAllByUserIdAndType(userId,2);
+        double asset = 0.0;
+        double dream = 0.0;
+        double basket = 0.0;
+        double debt = 0.0;
+
+        for (Basket item : lstAsset) {
+            asset = asset + item.getAvailableBalances();
+        }
+
+        for (Basket item : lstDream) {
+            dream = dream + item.getAvailableBalances();
+        }
+
+        for (Basket item : lstBasket) {
+            basket = basket + item.getAvailableBalances();
+        }
+
+        for (Basket item : lstDebt) {
+            debt = debt + item.getAvailableBalances();
+        }
+        lstResult.add(asset);
+        lstResult.add(dream);
+        lstResult.add(basket);
+        lstResult.add(debt);
+        return  lstResult;
+    }
+
+    public String updateStatus(String basketId, int status){
+        try {
+            Basket basket = basketRepository.findById(basketId).orElse(null);
+            basket.setStatus(status);
+            basketRepository.save(basket);
+            return "updated status";
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return "update fail";
+
     }
 }

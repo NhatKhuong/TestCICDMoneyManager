@@ -68,8 +68,8 @@ public class TransactionService {
         return null;
     }
 
-    public List<Transaction> findAllByUserIdAndType(String userId,int type){
-        return transactionRepositoty.findAllByUserIdAndType(userId, type);
+    public List<Transaction> findAllByUserIdAndTypeAndTypeBasket(String userId,int type, int typeBasket){
+        return transactionRepositoty.findAllByUserIdAndTypeAndTypeBasket(userId, type, typeBasket);
     }
 
     public List<Transaction> findAllByBasketId(String basketId) {
@@ -80,15 +80,15 @@ public class TransactionService {
         return transactionRepositoty.findAllByUserIdAndBasketId(userId,basketId);
     }
 
-    public List<Transaction> findAllByUserIdAndCreateDateBetween(String userId, SearchTransactionFromDateToDate searchTransactionFromDateToDate){
-        return transactionRepositoty.findAllByUserIdAndCreateDateBetween(userId,searchTransactionFromDateToDate.getFromDate(),searchTransactionFromDateToDate.getToDate());
-    }
+//    public List<Transaction> findAllByUserIdAndCreateDateBetween(String userId, SearchTransactionFromDateToDate searchTransactionFromDateToDate){
+//        return transactionRepositoty.findAllByUserIdAndCreateDateBetween(userId,searchTransactionFromDateToDate.getFromDate(),searchTransactionFromDateToDate.getToDate());
+//    }
 
-    public List<Transaction> findAllByUserIdAndTypeAndCreateDateBetween(String userId, SearchTransactionFromDateToDate searchTransactionFromDateToDate){
+    public List<Transaction> findAllByUserIdAndTypeAndTypeBasketAndCreateDateBetween(String userId, SearchTransactionFromDateToDate searchTransactionFromDateToDate){
         if(Objects.isNull(searchTransactionFromDateToDate)){
-            return transactionRepositoty.findAllByUserIdAndCreateDateBetween(userId,searchTransactionFromDateToDate.getFromDate(),searchTransactionFromDateToDate.getToDate());
+            return transactionRepositoty.findAllByUserIdAndTypeBasketAndCreateDateBetween(userId,searchTransactionFromDateToDate.getTypeBasket(),searchTransactionFromDateToDate.getFromDate(),searchTransactionFromDateToDate.getToDate());
         } else {
-            return transactionRepositoty.findAllByUserIdAndTypeAndCreateDateBetween(userId,searchTransactionFromDateToDate.getType(),searchTransactionFromDateToDate.getFromDate(),searchTransactionFromDateToDate.getToDate());
+            return transactionRepositoty.findAllByUserIdAndTypeAndTypeBasketAndCreateDateBetween(userId,searchTransactionFromDateToDate.getType(),searchTransactionFromDateToDate.getTypeBasket(),searchTransactionFromDateToDate.getFromDate(),searchTransactionFromDateToDate.getToDate());
         }
     }
 
@@ -101,7 +101,7 @@ public class TransactionService {
             Date dateEnd = UtilService.setDateEndDay(Date.from(dateEndLocal.atStartOfDay(ZoneId.systemDefault()).toInstant()));
             List<Transaction> lst = new ArrayList<>();
             if(Objects.isNull(searchTransactionFromDateToDate.getBasketId())){
-                lst = transactionRepositoty.findAllByUserIdAndTypeAndCreateDateBetween(searchTransactionFromDateToDate.getUserId(),searchTransactionFromDateToDate.getType(),dateStart,dateEnd);
+                lst = transactionRepositoty.findAllByUserIdAndTypeAndTypeBasketAndCreateDateBetween(searchTransactionFromDateToDate.getUserId(),searchTransactionFromDateToDate.getType(),searchTransactionFromDateToDate.getTypeBasket(),dateStart,dateEnd);
 
             } else {
                 lst = transactionRepositoty.findAllByUserIdAndTypeAndBasketIdAndCreateDateBetween(searchTransactionFromDateToDate.getUserId(),searchTransactionFromDateToDate.getType(),searchTransactionFromDateToDate.getBasketId(),dateStart,dateEnd);
@@ -123,7 +123,7 @@ public class TransactionService {
             Date dateEnd = UtilService.setDateEndDay(Date.from(localDateEnd.atStartOfDay(ZoneId.systemDefault()).toInstant()));
             List<Transaction> lst = new ArrayList<>();
             if(Objects.isNull(searchTransactionFromDateToDate.getBasketId())){
-                lst = transactionRepositoty.findAllByUserIdAndTypeAndCreateDateBetween(searchTransactionFromDateToDate.getUserId(),searchTransactionFromDateToDate.getType(),dateStart,dateEnd);
+                lst = transactionRepositoty.findAllByUserIdAndTypeAndTypeBasketAndCreateDateBetween(searchTransactionFromDateToDate.getUserId(),searchTransactionFromDateToDate.getType(), searchTransactionFromDateToDate.getTypeBasket(), dateStart,dateEnd);
 
             } else {
                 lst = transactionRepositoty.findAllByUserIdAndTypeAndBasketIdAndCreateDateBetween(searchTransactionFromDateToDate.getUserId(),searchTransactionFromDateToDate.getType(),searchTransactionFromDateToDate.getBasketId(),dateStart,dateEnd);

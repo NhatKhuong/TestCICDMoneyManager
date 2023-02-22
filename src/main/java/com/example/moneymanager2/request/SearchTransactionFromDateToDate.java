@@ -16,4 +16,5 @@ public class SearchTransactionFromDateToDate {
     private int month;
     private int year;
     private String basketId;
+    private Integer typeBasket;
 }

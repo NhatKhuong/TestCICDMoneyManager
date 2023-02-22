@@ -23,6 +23,7 @@ public class Transaction {
     private double moneyTransaction;
     private Integer type;
     private String note;
+    private Integer typeBasket;
 
     public Transaction(String userId, String basketId, Date createDate, double moneyTransaction, Integer type, String note) {
         this.userId = userId;

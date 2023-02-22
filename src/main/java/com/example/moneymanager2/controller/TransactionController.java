@@ -46,18 +46,18 @@ public class TransactionController {
         transactionService.update(transactionEx);
         return transactionEx;
     }
-    @GetMapping("/get-all-by-userId-and-type/{userId}/{type}")
-    public List<Transaction> findAllByUserIdAndType(@PathVariable("userId") String userId, @PathVariable("type") int type){
-        return transactionService.findAllByUserIdAndType(userId,type);
+    @GetMapping("/get-all-by-userId-and-type-and-type-basket/{userId}/{type}/{typeBasket}")
+    public List<Transaction> findAllByUserIdAndTypeAndTypeBasket(@PathVariable("userId") String userId, @PathVariable("type") int type, @PathVariable("typeBasket") int typeBasket){
+        return transactionService.findAllByUserIdAndTypeAndTypeBasket(userId,type,typeBasket);
     }
 
     @GetMapping("/get-all-by-userId-and-basketId/{userId}/{basketId}")
     public List<Transaction> findAllByUserId(@PathVariable("userId") String userId, @PathVariable("basketId") String basketId){
         return transactionService.findAllByUserIdAndBasketId(userId,basketId);
     }
-    @PostMapping("/get-all-by-userId-and-create-date/{userId}")
+    @PostMapping("/get-all-by-userId-and-type-basket-and-create-date/{userId}")
     public List<Transaction> findAllByUserId(@PathVariable("userId") String userId, @RequestBody SearchTransactionFromDateToDate searchTransactionFromDateToDate){
-        return transactionService.findAllByUserIdAndTypeAndCreateDateBetween(userId,searchTransactionFromDateToDate);
+        return transactionService.findAllByUserIdAndTypeAndTypeBasketAndCreateDateBetween(userId,searchTransactionFromDateToDate);
     }
 
     @PostMapping("/get-chart")

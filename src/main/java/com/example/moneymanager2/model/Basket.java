@@ -21,6 +21,7 @@ public class Basket {
     private double totalIncome;
 
     private Integer type;
+    private int status;
 
     public Basket(String userId, String name, double precent, double availableBalances, double totalSpending, double totalIncome) {
         this.userId = userId;

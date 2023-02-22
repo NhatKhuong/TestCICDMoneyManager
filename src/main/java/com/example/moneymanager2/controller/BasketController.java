@@ -55,6 +55,7 @@ public class BasketController {
             transactionSent.setType(-1);
             transactionSent.setNote(request.getNote());
             transactionSent.setUserId(request.getUserId());
+            transactionSent.setTypeBasket(basketSent.getType());
 
             Transaction transactionReceive = new Transaction();
             transactionReceive.setBasketId(request.getReceiveBasketId());
@@ -63,6 +64,7 @@ public class BasketController {
             transactionReceive.setType(1);
             transactionReceive.setNote(request.getNote());
             transactionReceive.setUserId(request.getUserId());
+            transactionReceive.setTypeBasket(basketReceive.getType());
 
             transactionService.save(transactionReceive);
             transactionService.save(transactionSent);
@@ -112,6 +114,16 @@ public class BasketController {
     @GetMapping("/get-all-by-userId-and-type/{userId}/{type}")
     public List<Basket> getAllBasketByUserId(@PathVariable("userId") String userId, @PathVariable("type") int type){
         return basketService.findAllByUserIdAndTpe(userId,type);
+    }
+
+    @GetMapping("/get-all-asset-by-userId/{userId}")
+    public List<Double> getAllBasketByUserId(@PathVariable("userId") String userId){
+        return basketService.getListAsset(userId);
+    }
+
+    @GetMapping("/update-status/{basketId}/{status}")
+    public String updateStatus(@PathVariable("basketId") String basketId, @PathVariable("status") int status){
+        return basketService.updateStatus(basketId,status);
     }
 
 
