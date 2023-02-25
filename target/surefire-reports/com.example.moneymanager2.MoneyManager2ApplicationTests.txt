@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.example.moneymanager2.MoneyManager2ApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.197 s - in com.example.moneymanager2.MoneyManager2ApplicationTests
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.902 s - in com.example.moneymanager2.MoneyManager2ApplicationTests
