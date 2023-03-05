@@ -33,6 +33,10 @@ public class BasketService {
         }
     }
 
+    public List<Basket> findAllByTypeAndStatus(int type, int status){
+        return basketRepository.findAllByTypeAndStatus(3,0);
+    }
+
     public boolean delete(Basket basket){
         try{
             basketRepository.delete(basket);
