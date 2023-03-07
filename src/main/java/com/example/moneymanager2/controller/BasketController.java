@@ -3,6 +3,7 @@ package com.example.moneymanager2.controller;
 import com.example.moneymanager2.model.Basket;
 import com.example.moneymanager2.model.Book;
 import com.example.moneymanager2.model.Transaction;
+import com.example.moneymanager2.request.DistributeMoneyRequest;
 import com.example.moneymanager2.request.TranferMoneyRequest;
 import com.example.moneymanager2.service.BasketService;
 import com.example.moneymanager2.service.TransactionService;
@@ -125,6 +126,12 @@ public class BasketController {
     public String updateStatus(@PathVariable("basketId") String basketId, @PathVariable("status") int status){
         return basketService.updateStatus(basketId,status);
     }
+
+    @PostMapping("/distribute-money")
+    public boolean updateStatus(@RequestBody DistributeMoneyRequest distributeMoneyRequest){
+        return basketService.distributeMoneyIntoBasket(distributeMoneyRequest);
+    }
+
 
 
 }
