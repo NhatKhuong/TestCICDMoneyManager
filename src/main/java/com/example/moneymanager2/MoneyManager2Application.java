@@ -19,8 +19,8 @@ public class MoneyManager2Application {
 //                System.out.println("Run schedule job");
 //            }
 //        }, 0,1000);
-        ScheduleNotification scheduleNotification = new ScheduleNotification();
-        scheduleNotification.runScheduleNotification();
+//        ScheduleNotification scheduleNotification = new ScheduleNotification();
+//        scheduleNotification.runScheduleNotification();
     }
 
 }

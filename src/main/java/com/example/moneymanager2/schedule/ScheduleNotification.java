@@ -25,30 +25,30 @@ public class ScheduleNotification {
 //        }
 //    }, 0,1000);
     public void runScheduleNotification(){
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                System.out.println("run schedule job");
-                List<Basket> lstBasket = basketService.findAllByTypeAndStatus(3,0);
-                for (Basket basket : lstBasket) {
-                    long nowTime = now.getTime();
-                    long createTime = basket.getCreatedDate().getTime();
-                    long spaceTime = Math.abs(nowTime - createTime);
-                    long spaceDate = TimeUnit.DAYS.convert(spaceTime,TimeUnit.MILLISECONDS);
-                    int deltaOfSpaceDateAndNumberDateComplete = (int) (spaceDate - basket.getNumberDateComplete());
-                    if(deltaOfSpaceDateAndNumberDateComplete != 0 && deltaOfSpaceDateAndNumberDateComplete > basket.getNumberDateMix()){
-                        NotificationDream notificationDream = new NotificationDream();
-                        notificationDream.setBasketId(basket.getId());
-                        notificationDream.setUserId(basket.getUserId());
-                        notificationDream.setCreatedDate(new Date());
-                        notificationDream.setMessage("Bạn đã quên tích lũy cho ước mơ "+basket.getName());
-                        notificationDreamService.save(notificationDream);
-                    }
-                }
-
-
-            }
-        },0,1000);
+//        Timer timer = new Timer();
+//        timer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                System.out.println("run schedule job");
+//                List<Basket> lstBasket = basketService.findAllByTypeAndStatus(3,0);
+//                for (Basket basket : lstBasket) {
+//                    long nowTime = now.getTime();
+//                    long createTime = basket.getCreatedDate().getTime();
+//                    long spaceTime = Math.abs(nowTime - createTime);
+//                    long spaceDate = TimeUnit.DAYS.convert(spaceTime,TimeUnit.MILLISECONDS);
+//                    int deltaOfSpaceDateAndNumberDateComplete = (int) (spaceDate - basket.getNumberDateComplete());
+//                    if(deltaOfSpaceDateAndNumberDateComplete != 0 && deltaOfSpaceDateAndNumberDateComplete > basket.getNumberDateMix()){
+//                        NotificationDream notificationDream = new NotificationDream();
+//                        notificationDream.setBasketId(basket.getId());
+//                        notificationDream.setUserId(basket.getUserId());
+//                        notificationDream.setCreatedDate(new Date());
+//                        notificationDream.setMessage("Bạn đã quên tích lũy cho ước mơ "+basket.getName());
+//                        notificationDreamService.save(notificationDream);
+//                    }
+//                }
+//
+//
+//            }
+//        },0,1000);
     }
 }

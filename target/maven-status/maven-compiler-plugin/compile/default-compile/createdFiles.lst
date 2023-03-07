@@ -1,11 +1,14 @@
+com\example\moneymanager2\repository\NotificationDreamRepository.class
 com\example\moneymanager2\model\Transaction.class
 com\example\moneymanager2\model\User.class
 com\example\moneymanager2\model\Book.class
+com\example\moneymanager2\service\NotificationDreamService.class
 com\example\moneymanager2\controller\AuthController.class
 com\example\moneymanager2\controller\TestController.class
 com\example\moneymanager2\MoneyManager2Application.class
 com\example\moneymanager2\model\Basket.class
 com\example\moneymanager2\request\TranferMoneyRequest$TranferMoneyRequestBuilder.class
+com\example\moneymanager2\request\DistributeMoneyRequest$DistributeMoneyRequestBuilder.class
 com\example\moneymanager2\repository\BookRepository.class
 com\example\moneymanager2\util\UtilService.class
 com\example\moneymanager2\service\BookService.class
@@ -15,6 +18,8 @@ com\example\moneymanager2\config\FireBaseTokenFilter.class
 com\example\moneymanager2\request\SearchTransactionFromDateToDate.class
 com\example\moneymanager2\repository\UserRepository.class
 com\example\moneymanager2\config\FirebaseInitialization.class
+com\example\moneymanager2\request\DistributeMoneyRequest.class
+com\example\moneymanager2\model\NotificationDream.class
 com\example\moneymanager2\repository\TransactionRepositoty.class
 com\example\moneymanager2\controller\UserController.class
 com\example\moneymanager2\request\TranferMoneyRequest.class

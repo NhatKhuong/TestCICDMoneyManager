@@ -5,6 +5,7 @@ import com.example.moneymanager2.model.Transaction;
 import com.example.moneymanager2.model.User;
 import com.example.moneymanager2.repository.BasketRepository;
 import com.example.moneymanager2.repository.TransactionRepositoty;
+import com.example.moneymanager2.request.DistributeMoneyRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -125,5 +126,29 @@ public class BasketService {
         }
         return "update fail";
 
+    }
+
+    public boolean distributeMoneyIntoBasket(DistributeMoneyRequest request){
+        try {
+            List<Basket> lstBasket = basketRepository.findAllByUserIdAndType(request.getUserId(),1);
+            for (Basket basket : lstBasket) {
+                basket.setAvailableBalances(basket.getAvailableBalances() + (basket.getPrecent()*request.getMoney()));
+                basket.setTotalIncome(basket.getTotalIncome() + (request.getMoney()*basket.getPrecent()));
+                basketRepository.save(basket);
+                Transaction transaction = new Transaction();
+                transaction.setTypeBasket(1);
+                transaction.setMoneyTransaction(request.getMoney()*basket.getPrecent());
+                transaction.setBasketId(basket.getId());
+                transaction.setNote(request.getNote());
+                transaction.setCreateDate(request.getCreatedDate());
+                transaction.setType(1);
+                transaction.setUserId(request.getUserId());
+                transactionRepositoty.save(transaction);
+            }
+            return true;
+        } catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
     }
 }
