@@ -4,6 +4,8 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Date;
+
 
 @Getter
 @Setter
@@ -21,7 +23,10 @@ public class Basket {
     private double totalIncome;
 
     private Integer type;
-    private int status;
+    private Integer status;
+    private double moneyPurpose;
+    private Date datedComplete;
+    private Date createdDate;
 
     public Basket(String userId, String name, double precent, double availableBalances, double totalSpending, double totalIncome) {
         this.userId = userId;
