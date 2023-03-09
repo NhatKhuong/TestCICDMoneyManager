@@ -54,7 +54,7 @@ public class BasketController {
             transactionSent.setCreateDate(request.getCreatedDate());
             transactionSent.setMoneyTransaction(request.getMoney());
             transactionSent.setType(-1);
-            transactionSent.setNote(request.getNote());
+            transactionSent.setNote("Chuyển tiền : "+basketReceive.getName());
             transactionSent.setUserId(request.getUserId());
             transactionSent.setTypeBasket(basketSent.getType());
 
@@ -63,7 +63,7 @@ public class BasketController {
             transactionReceive.setCreateDate(request.getCreatedDate());
             transactionReceive.setMoneyTransaction(request.getMoney());
             transactionReceive.setType(1);
-            transactionReceive.setNote(request.getNote());
+            transactionReceive.setNote("Nhận tiền : "+basketSent.getName());
             transactionReceive.setUserId(request.getUserId());
             transactionReceive.setTypeBasket(basketReceive.getType());
 
