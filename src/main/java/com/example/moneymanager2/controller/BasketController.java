@@ -117,6 +117,11 @@ public class BasketController {
         return basketService.findAllByUserIdAndTpe(userId,type);
     }
 
+    @GetMapping("/get-all-by-userId-and-type/{userId}/{type}/{status}")
+    public List<Basket> getAllBasketByUserIdAndTypeAndStatus(@PathVariable("userId") String userId, @PathVariable("type") int type, @PathVariable("status") int status){
+        return basketService.findAllByUserIdAndTypeAndStatus(userId,type,status);
+    }
+
     @GetMapping("/get-all-asset-by-userId/{userId}")
     public List<Double> getAllBasketByUserId(@PathVariable("userId") String userId){
         return basketService.getListAsset(userId);

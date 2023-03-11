@@ -78,6 +78,10 @@ public class BasketService {
         return basketRepository.findAllByUserIdAndType(userId,type);
     }
 
+    public List<Basket> findAllByUserIdAndTypeAndStatus(String userId, int type, int status){
+        return basketRepository.findAllByUserIdAndTypeAndStatus(userId,type,status);
+    }
+
     public List<Double> getListAsset(String userId){
         List<Double> lstResult = new ArrayList<>();
         List<Basket> lstAsset = basketRepository.findAllByUserIdAndType(userId,4);
