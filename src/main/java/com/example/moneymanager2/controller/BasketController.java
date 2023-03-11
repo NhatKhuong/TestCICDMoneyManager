@@ -127,7 +127,7 @@ public class BasketController {
         return basketService.getListAsset(userId);
     }
 
-    @GetMapping("/update-status/{basketId}/{status}")
+    @PostMapping("/update-status/{basketId}/{status}")
     public String updateStatus(@PathVariable("basketId") String basketId, @PathVariable("status") int status){
         return basketService.updateStatus(basketId,status);
     }
