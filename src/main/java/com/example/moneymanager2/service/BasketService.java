@@ -128,12 +128,12 @@ public class BasketService {
         try {
             List<Basket> lstBasket = basketRepository.findAllByUserIdAndType(request.getUserId(),1);
             for (Basket basket : lstBasket) {
-                basket.setAvailableBalances(basket.getAvailableBalances() + (basket.getPrecent()*request.getMoney()));
-                basket.setTotalIncome(basket.getTotalIncome() + (request.getMoney()*basket.getPrecent()));
+                basket.setAvailableBalances(basket.getAvailableBalances() + (basket.getPrecent()*0.01*request.getMoney()));
+                basket.setTotalIncome(basket.getTotalIncome() + (request.getMoney()*0.01*basket.getPrecent()));
                 basketRepository.save(basket);
                 Transaction transaction = new Transaction();
                 transaction.setTypeBasket(1);
-                transaction.setMoneyTransaction(request.getMoney()*basket.getPrecent());
+                transaction.setMoneyTransaction(request.getMoney()*0.01*basket.getPrecent());
                 transaction.setBasketId(basket.getId());
                 transaction.setNote(request.getNote());
                 transaction.setCreateDate(request.getCreatedDate());
