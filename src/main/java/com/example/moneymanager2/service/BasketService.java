@@ -6,6 +6,7 @@ import com.example.moneymanager2.model.User;
 import com.example.moneymanager2.repository.BasketRepository;
 import com.example.moneymanager2.repository.TransactionRepositoty;
 import com.example.moneymanager2.request.DistributeMoneyRequest;
+import com.example.moneymanager2.request.SearchBasketByTimeRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -78,8 +79,17 @@ public class BasketService {
         return basketRepository.findAllByUserIdAndType(userId,type);
     }
 
+    public List<Basket> findAllByUserIdAndTypeAndMonthNumberAndYearNumber(String userId, int type, SearchBasketByTimeRequest request){
+        return basketRepository.findAllByUserIdAndTypeAndMonthNumberAndYearNumber(userId,type,request.getMonthNumber(),request.getYearNumber());
+    }
+
+
     public List<Basket> findAllByUserIdAndTypeAndStatus(String userId, int type, int status){
         return basketRepository.findAllByUserIdAndTypeAndStatus(userId,type,status);
+    }
+
+    public Basket findAllByUserIdAndTypeAndIsCash(String userId, int type){
+        return basketRepository.findAllByUserIdAndTypeAndIsCash(userId,type,true);
     }
 
     public List<Double> getListAsset(String userId){
@@ -130,8 +140,10 @@ public class BasketService {
 
     public boolean distributeMoneyIntoBasket(DistributeMoneyRequest request){
         try {
-            List<Basket> lstBasket = basketRepository.findAllByUserIdAndType(request.getUserId(),1);
+//            List<Basket> lstBasket = basketRepository.findAllByUserIdAndType(request.getUserId(),1);
+            List<Basket> lstBasket = basketRepository.findAllByUserIdAndTypeAndMonthNumberAndYearNumber(request.getUserId(),1,request.getCreatedDate().getMonth(),request.getCreatedDate().getYear());
             for (Basket basket : lstBasket) {
+
                 basket.setAvailableBalances(basket.getAvailableBalances() + (basket.getPrecent()*0.01*request.getMoney()));
                 basket.setTotalIncome(basket.getTotalIncome() + (request.getMoney()*0.01*basket.getPrecent()));
                 basketRepository.save(basket);

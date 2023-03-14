@@ -4,6 +4,7 @@ import com.example.moneymanager2.model.Basket;
 import com.example.moneymanager2.model.Book;
 import com.example.moneymanager2.model.Transaction;
 import com.example.moneymanager2.request.DistributeMoneyRequest;
+import com.example.moneymanager2.request.SearchBasketByTimeRequest;
 import com.example.moneymanager2.request.TranferMoneyRequest;
 import com.example.moneymanager2.service.BasketService;
 import com.example.moneymanager2.service.TransactionService;
@@ -117,6 +118,11 @@ public class BasketController {
         return basketService.findAllByUserIdAndTpe(userId,type);
     }
 
+    @PostMapping("/get-all-by-userId-and-type-by-time/{userId}/{type}")
+    public List<Basket> getAllBasketByUserIdAndTime(@PathVariable("userId") String userId, @PathVariable("type") int type, @RequestBody SearchBasketByTimeRequest request){
+        return basketService.findAllByUserIdAndTypeAndMonthNumberAndYearNumber(userId,type,request);
+    }
+
     @GetMapping("/get-all-by-userId-and-type/{userId}/{type}/{status}")
     public List<Basket> getAllBasketByUserIdAndTypeAndStatus(@PathVariable("userId") String userId, @PathVariable("type") int type, @PathVariable("status") int status){
         return basketService.findAllByUserIdAndTypeAndStatus(userId,type,status);
@@ -135,6 +141,11 @@ public class BasketController {
     @PostMapping("/distribute-money")
     public boolean updateStatus(@RequestBody DistributeMoneyRequest distributeMoneyRequest){
         return basketService.distributeMoneyIntoBasket(distributeMoneyRequest);
+    }
+
+    @GetMapping("/get-cash-basket/{userId}/{type}")
+    public Basket getCashBasket(@PathVariable("userId") String userId, @PathVariable("type") int type){
+        return basketService.findAllByUserIdAndTypeAndIsCash(userId,type);
     }
 
 
