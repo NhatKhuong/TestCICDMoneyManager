@@ -18,8 +18,10 @@ com\example\moneymanager2\config\FirebaseInitialization.class
 com\example\moneymanager2\repository\TransactionRepositoty.class
 com\example\moneymanager2\controller\UserController.class
 com\example\moneymanager2\request\TranferMoneyRequest.class
+com\example\moneymanager2\request\SearchBasketByTimeRequest$SearchBasketByTimeRequestBuilder.class
 com\example\moneymanager2\controller\BookController.class
 com\example\moneymanager2\controller\TransactionController.class
+com\example\moneymanager2\request\SearchBasketByTimeRequest.class
 com\example\moneymanager2\service\TransactionService.class
 com\example\moneymanager2\service\BasketService.class
 com\example\moneymanager2\request\SearchTransactionFromDateToDate$SearchTransactionFromDateToDateBuilder.class
