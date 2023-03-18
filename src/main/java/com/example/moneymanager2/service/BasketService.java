@@ -141,7 +141,7 @@ public class BasketService {
     public boolean distributeMoneyIntoBasket(DistributeMoneyRequest request){
         try {
 //            List<Basket> lstBasket = basketRepository.findAllByUserIdAndType(request.getUserId(),1);
-            List<Basket> lstBasket = basketRepository.findAllByUserIdAndTypeAndMonthNumberAndYearNumber(request.getUserId(),1,request.getCreatedDate().getMonth(),request.getCreatedDate().getYear());
+            List<Basket> lstBasket = basketRepository.findAllByUserIdAndTypeAndMonthNumberAndYearNumber(request.getUserId(),1,request.getMonthNumber(),request.getYearNumber());
             for (Basket basket : lstBasket) {
 
                 basket.setAvailableBalances(basket.getAvailableBalances() + (basket.getPrecent()*0.01*request.getMoney()));

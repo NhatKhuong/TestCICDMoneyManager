@@ -14,4 +14,6 @@ public class DistributeMoneyRequest {
     private double money;
     private Date createdDate;
     private String note;
+    private int monthNumber;
+    private int yearNumber;
 }
