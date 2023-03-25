@@ -103,12 +103,12 @@ public class BasketController {
 
     @PutMapping("/{id}")
     public Basket update(@PathVariable("id") String id, @RequestBody Basket basket){
-//        Basket basketEx = findById(id);
-//        basketEx.setName(basket.getName());
-//        basketEx.setAvailableBalances(basket.getAvailableBalances());
-//        basketEx.setPrecent(basket.getPrecent());
-//        basketEx.setTotalIncome(basket.getTotalIncome());
-//        basketEx.setTotalSpending(basket.getTotalSpending());
+        Basket basketEx = findById(id);
+        basketEx.setName(basket.getName());
+        basketEx.setAvailableBalances(basket.getAvailableBalances());
+        basketEx.setPrecent(basket.getPrecent());
+        basketEx.setTotalIncome(basket.getTotalIncome());
+        basketEx.setTotalSpending(basket.getTotalSpending());
         basketService.update(basket);
         return basket;
     }
