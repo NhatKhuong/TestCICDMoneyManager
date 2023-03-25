@@ -128,7 +128,7 @@ public class BasketController {
         return basketService.findAllByUserIdAndTypeAndStatus(userId,type,status);
     }
 
-    @GetMapping("/get-all-asset-by-userId/{userId}")
+    @PostMapping("/get-all-asset-by-userId/{userId}")
     public List<Double> getAllBasketByUserId(@PathVariable("userId") String userId, @RequestBody SearchBasketByTimeRequest request){
         return basketService.getListAsset(userId, request.getMonthNumber(),request.getYearNumber());
     }
