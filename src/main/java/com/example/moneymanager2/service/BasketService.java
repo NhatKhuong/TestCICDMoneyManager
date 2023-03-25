@@ -96,9 +96,9 @@ public class BasketService {
     public List<Double> getListAsset(String userId, int month, int year){
         List<Double> lstResult = new ArrayList<>();
         List<Basket> lstAsset = basketRepository.findAllByUserIdAndType(userId,4);
-        List<Basket> lstDream = basketRepository.findAllByUserIdAndType(userId,3);
+        List<Basket> lstDream = basketRepository.findAllByUserIdAndTypeAndStatus(userId,3,0);
         List<Basket> lstBasket = basketRepository.findAllByUserIdAndTypeAndMonthNumberAndYearNumber(userId,1,month,year);
-        List<Basket> lstDebt = basketRepository.findAllByUserIdAndType(userId,2);
+        List<Basket> lstDebt = basketRepository.findAllByUserIdAndTypeAndStatus(userId,2,0);
         double asset = 0.0;
         double dream = 0.0;
         double basket = 0.0;
