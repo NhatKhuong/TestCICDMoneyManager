@@ -17,4 +17,6 @@ public class SearchTransactionFromDateToDate {
     private int year;
     private String basketId;
     private Integer typeBasket;
+    private Boolean isDay;
+    private Boolean isWeek;
 }

@@ -12,10 +12,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.time.temporal.ChronoField;
+import java.util.*;
 
 @Service
 public class TransactionService {
@@ -107,14 +105,40 @@ public class TransactionService {
                 lst = transactionRepositoty.findAllByUserIdAndTypeAndBasketIdAndCreateDateBetween(searchTransactionFromDateToDate.getUserId(),searchTransactionFromDateToDate.getType(),searchTransactionFromDateToDate.getBasketId(),dateStart,dateEnd);
             }
 
-            for(int i = 1; i <= getNumberOfDaysInMonth(searchTransactionFromDateToDate.getYear(), searchTransactionFromDateToDate.getMonth()); i++){
-                double money = 0.0;
+            Map<Integer,List<Transaction>> map = new HashMap<>();
+            if(searchTransactionFromDateToDate.getIsDay()){
+                for(int i = 1; i <= getNumberOfDaysInMonth(searchTransactionFromDateToDate.getYear(), searchTransactionFromDateToDate.getMonth()); i++){
+                    double money = 0.0;
+                    for (Transaction transaction : lst) {
+                        if(transaction.getCreateDate().getDate() == i && transaction.getType() == searchTransactionFromDateToDate.getType()){
+                            money = money + transaction.getMoneyTransaction();
+                        }
+                    }
+                    lstResult.add(money);
+                }
+            } else if(searchTransactionFromDateToDate.getIsWeek()){
+                Map<Integer,Double> mapWeek = new HashMap<>();
+                List<Integer> weekInMonths = new ArrayList<>();
+                weekInMonths.add(LocalDate.of(searchTransactionFromDateToDate.getYear(), searchTransactionFromDateToDate.getMonth(), 1).get(ChronoField.ALIGNED_WEEK_OF_YEAR));
+                weekInMonths.add(LocalDate.of(searchTransactionFromDateToDate.getYear(), searchTransactionFromDateToDate.getMonth(), 8).get(ChronoField.ALIGNED_WEEK_OF_YEAR));
+                weekInMonths.add(LocalDate.of(searchTransactionFromDateToDate.getYear(), searchTransactionFromDateToDate.getMonth(), 15).get(ChronoField.ALIGNED_WEEK_OF_YEAR));
+                weekInMonths.add(LocalDate.of(searchTransactionFromDateToDate.getYear(), searchTransactionFromDateToDate.getMonth(), 22).get(ChronoField.ALIGNED_WEEK_OF_YEAR));
+                Collections.sort(weekInMonths);
+                weekInMonths.add(weekInMonths.get(weekInMonths.size()-1)+1);
                 for (Transaction transaction : lst) {
-                    if(transaction.getCreateDate().getDate() == i && transaction.getType() == searchTransactionFromDateToDate.getType()){
-                        money = money + transaction.getMoneyTransaction();
+                    int weekOfYear = getNumberWeekOfYear(transaction.getCreateDate());
+                    if(!mapWeek.containsKey(weekOfYear)){
+                        mapWeek.put(weekOfYear,transaction.getMoneyTransaction());
+
+                    } else if(mapWeek.containsKey(weekOfYear)){
+                        mapWeek.put(weekOfYear,mapWeek.get(weekOfYear) + transaction.getMoneyTransaction());
                     }
                 }
-                lstResult.add(money);
+                for (Integer numWeek : weekInMonths ) {
+                    lstResult.add(Objects.isNull(mapWeek.get(numWeek)) ? 0.0 : mapWeek.get(numWeek));
+                }
+                lstResult.set(lstResult.size()-2,lstResult.get(lstResult.size()-1)+lstResult.get(lstResult.size()-2));
+                lstResult.remove(lstResult.size()-1);
             }
         } else {
             LocalDate localDate = LocalDate.of(searchTransactionFromDateToDate.getYear(), 1,1);
@@ -155,5 +179,11 @@ public class TransactionService {
         return dateToConvert.toInstant()
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate();
+    }
+
+    public int getNumberWeekOfYear(Date date){
+        LocalDate localDate = convertToLocalDateViaInstant(date);
+        int weekOfYear = localDate.get(ChronoField.ALIGNED_WEEK_OF_YEAR);
+        return weekOfYear;
     }
 }
