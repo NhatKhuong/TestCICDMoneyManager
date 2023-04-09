@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/basket")
@@ -29,11 +30,17 @@ public class BasketController {
     }
 
     @PostMapping("/create-list-basket")
-    public String createListBasket(@RequestBody List<Basket> lstBasket){
-        for (Basket basket : lstBasket) {
-            save(basket);
+    public List<Basket> createListBasket(@RequestBody List<Basket> lstBasket){
+        try {
+            for (Basket basket : lstBasket) {
+                basket.setId(UUID.randomUUID().toString());
+                save(basket);
+            }
+            return lstBasket;
+        } catch (Exception e){
+            e.printStackTrace();
         }
-        return "save success";
+        return null;
     }
 
     @PostMapping("/transfer-money")
