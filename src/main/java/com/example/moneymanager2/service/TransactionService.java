@@ -7,11 +7,12 @@ import com.example.moneymanager2.repository.TransactionRepositoty;
 import com.example.moneymanager2.request.SearchTransactionFromDateToDate;
 import com.example.moneymanager2.util.UtilService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.YearMonth;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.temporal.ChronoField;
 import java.util.*;
 
@@ -66,8 +67,25 @@ public class TransactionService {
         return null;
     }
 
-    public List<Transaction> findAllByUserIdAndTypeAndTypeBasket(String userId,int type, int typeBasket){
-        return transactionRepositoty.findAllByUserIdAndTypeAndTypeBasket(userId, type, typeBasket);
+    public List<Transaction> findAllByUserIdAndTypeAndTypeBasketAndCreateDateBetween(SearchTransactionFromDateToDate request){
+        Pageable pageable = UtilService.convertPageableAndSort(request.getPageNumber(), request.getPageSize(), request.getSort());
+        LocalDate localDate = LocalDate.of(request.getYear(),request.getMonth(),1);
+        Date dateStart = UtilService.atStartOfDay(Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        LocalDate dateEndLocal = localDate.withDayOfMonth(localDate.getMonth().length(localDate.isLeapYear()));
+        Date dateEnd = UtilService.setDateEndDay(Date.from(dateEndLocal.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        if(Objects.isNull(request.getBasketId())){
+            if(Objects.isNull(request.getType())){
+                return transactionRepositoty.findAllByUserIdAndTypeInAndTypeBasketAndCreateDateBetween(request.getUserId(), Arrays.asList(1,-1), request.getTypeBasket(),dateStart, dateEnd, pageable);
+            } else {
+                return transactionRepositoty.findAllByUserIdAndTypeInAndTypeBasketAndCreateDateBetween(request.getUserId(), Arrays.asList(request.getType()), request.getTypeBasket(),dateStart, dateEnd, pageable);
+            }
+        } else {
+            if(Objects.isNull(request.getType())){
+                return transactionRepositoty.findAllByUserIdAndTypeInAndBasketIdAndCreateDateBetween(request.getUserId(), Arrays.asList(1,-1), request.getBasketId(),dateStart, dateEnd, pageable);
+            } else {
+                return transactionRepositoty.findAllByUserIdAndTypeInAndBasketIdAndCreateDateBetween(request.getUserId(), Arrays.asList(request.getType()), request.getBasketId(),dateStart, dateEnd, pageable);
+            }
+        }
     }
 
     public List<Transaction> findAllByBasketId(String basketId) {
@@ -78,9 +96,6 @@ public class TransactionService {
         return transactionRepositoty.findAllByUserIdAndBasketId(userId,basketId);
     }
 
-//    public List<Transaction> findAllByUserIdAndCreateDateBetween(String userId, SearchTransactionFromDateToDate searchTransactionFromDateToDate){
-//        return transactionRepositoty.findAllByUserIdAndCreateDateBetween(userId,searchTransactionFromDateToDate.getFromDate(),searchTransactionFromDateToDate.getToDate());
-//    }
 
     public List<Transaction> findAllByUserIdAndTypeAndTypeBasketAndCreateDateBetween(String userId, SearchTransactionFromDateToDate searchTransactionFromDateToDate){
         if(Objects.isNull(searchTransactionFromDateToDate)){
@@ -117,28 +132,32 @@ public class TransactionService {
                     lstResult.add(money);
                 }
             } else if(searchTransactionFromDateToDate.getIsWeek()){
-                Map<Integer,Double> mapWeek = new HashMap<>();
-                List<Integer> weekInMonths = new ArrayList<>();
-                weekInMonths.add(LocalDate.of(searchTransactionFromDateToDate.getYear(), searchTransactionFromDateToDate.getMonth(), 1).get(ChronoField.ALIGNED_WEEK_OF_YEAR));
-                weekInMonths.add(LocalDate.of(searchTransactionFromDateToDate.getYear(), searchTransactionFromDateToDate.getMonth(), 8).get(ChronoField.ALIGNED_WEEK_OF_YEAR));
-                weekInMonths.add(LocalDate.of(searchTransactionFromDateToDate.getYear(), searchTransactionFromDateToDate.getMonth(), 15).get(ChronoField.ALIGNED_WEEK_OF_YEAR));
-                weekInMonths.add(LocalDate.of(searchTransactionFromDateToDate.getYear(), searchTransactionFromDateToDate.getMonth(), 22).get(ChronoField.ALIGNED_WEEK_OF_YEAR));
-                Collections.sort(weekInMonths);
-                weekInMonths.add(weekInMonths.get(weekInMonths.size()-1)+1);
+                LocalDate dateSta = LocalDate.of(searchTransactionFromDateToDate.getYear(), searchTransactionFromDateToDate.getMonth(),1);
+                LocalDateTime dateStartOfWeek1 = LocalDate.of(searchTransactionFromDateToDate.getYear(), searchTransactionFromDateToDate.getMonth(),1).atStartOfDay();
+                LocalDateTime dateEndOfWeek1 = LocalTime.MAX.atDate(LocalDate.of(searchTransactionFromDateToDate.getYear(), searchTransactionFromDateToDate.getMonth(),7));
+                LocalDateTime dateStartOfWeek2 = LocalDate.of(searchTransactionFromDateToDate.getYear(), searchTransactionFromDateToDate.getMonth(),8).atStartOfDay();
+                LocalDateTime dateEndOfWeek2 = LocalTime.MAX.atDate(LocalDate.of(searchTransactionFromDateToDate.getYear(), searchTransactionFromDateToDate.getMonth(),14));
+                LocalDateTime dateStartOfWeek3 = LocalDate.of(searchTransactionFromDateToDate.getYear(), searchTransactionFromDateToDate.getMonth(),15).atStartOfDay();
+                LocalDateTime dateEndOfWeek3 = LocalTime.MAX.atDate(LocalDate.of(searchTransactionFromDateToDate.getYear(), searchTransactionFromDateToDate.getMonth()-1,21));
+                LocalDateTime dateStartOfWeek4 = LocalDate.of(searchTransactionFromDateToDate.getYear(), searchTransactionFromDateToDate.getMonth(),22).atStartOfDay();
+                LocalDate lastDayOfMonthDate  = dateSta.withDayOfMonth(
+                        dateSta.getMonth().length(dateSta.isLeapYear()));
+                LocalDateTime dateEndOfWeek4 = LocalTime.MAX.atDate(lastDayOfMonthDate);
+                lstResult = Arrays.asList(0.0,0.0,0.0,0.0);
                 for (Transaction transaction : lst) {
-                    int weekOfYear = getNumberWeekOfYear(transaction.getCreateDate());
-                    if(!mapWeek.containsKey(weekOfYear)){
-                        mapWeek.put(weekOfYear,transaction.getMoneyTransaction());
-
-                    } else if(mapWeek.containsKey(weekOfYear)){
-                        mapWeek.put(weekOfYear,mapWeek.get(weekOfYear) + transaction.getMoneyTransaction());
+                    LocalDateTime createDate = convertToLocalDateTimeViaInstant(transaction.getCreateDate());
+                    boolean g = createDate.isAfter(dateStartOfWeek2);
+                    boolean h = createDate.isBefore(dateEndOfWeek2);
+                    if(createDate.isAfter(dateStartOfWeek1) && createDate.isBefore(dateEndOfWeek1)){
+                        lstResult.set(0,lstResult.get(0)+transaction.getMoneyTransaction());
+                    } else if(createDate.isAfter(dateStartOfWeek2) && createDate.isBefore(dateEndOfWeek2)){
+                        lstResult.set(1,lstResult.get(1)+transaction.getMoneyTransaction());
+                    } else if(createDate.isAfter(dateStartOfWeek3) && createDate.isBefore(dateEndOfWeek3)){
+                        lstResult.set(2,lstResult.get(2)+transaction.getMoneyTransaction());
+                    } else if(createDate.isAfter(dateStartOfWeek4) && createDate.isBefore(dateEndOfWeek4)){
+                        lstResult.set(3,lstResult.get(3)+transaction.getMoneyTransaction());
                     }
                 }
-                for (Integer numWeek : weekInMonths ) {
-                    lstResult.add(Objects.isNull(mapWeek.get(numWeek)) ? 0.0 : mapWeek.get(numWeek));
-                }
-                lstResult.set(lstResult.size()-2,lstResult.get(lstResult.size()-1)+lstResult.get(lstResult.size()-2));
-                lstResult.remove(lstResult.size()-1);
             }
         } else {
             LocalDate localDate = LocalDate.of(searchTransactionFromDateToDate.getYear(), 1,1);
@@ -185,5 +204,11 @@ public class TransactionService {
         LocalDate localDate = convertToLocalDateViaInstant(date);
         int weekOfYear = localDate.get(ChronoField.ALIGNED_WEEK_OF_YEAR);
         return weekOfYear;
+    }
+
+    public LocalDateTime convertToLocalDateTimeViaInstant(Date dateToConvert) {
+        return dateToConvert.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
     }
 }

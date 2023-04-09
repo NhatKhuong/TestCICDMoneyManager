@@ -8,7 +8,7 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SearchTransactionFromDateToDate {
+public class SearchTransactionFromDateToDate extends BasePageAndSortRequest{
     private Date fromDate;
     private Date toDate;
     private Integer type;

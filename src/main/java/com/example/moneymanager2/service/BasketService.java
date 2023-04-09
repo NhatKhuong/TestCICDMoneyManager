@@ -36,6 +36,18 @@ public class BasketService {
         }
     }
 
+    public String createListBasket(List<Basket> lstBasket){
+        try {
+            for (Basket basket : lstBasket) {
+                save(basket);
+            }
+            return "save success";
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return "fail";
+    }
+
     public boolean delete(Basket basket){
         try{
             basketRepository.delete(basket);
