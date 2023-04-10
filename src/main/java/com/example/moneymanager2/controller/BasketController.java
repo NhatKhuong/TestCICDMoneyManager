@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @RestController
@@ -33,7 +34,9 @@ public class BasketController {
     public List<Basket> createListBasket(@RequestBody List<Basket> lstBasket){
         try {
             for (Basket basket : lstBasket) {
-                basket.setId(UUID.randomUUID().toString());
+                if(Objects.isNull(basket.getId())){
+                    basket.setId(UUID.randomUUID().toString());
+                }
                 save(basket);
             }
             return lstBasket;
