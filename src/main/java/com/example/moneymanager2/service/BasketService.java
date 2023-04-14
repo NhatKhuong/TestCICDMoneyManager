@@ -132,7 +132,7 @@ public class BasketService {
         for (Basket item : lstDebt) {
             debt = debt + item.getAvailableBalances();
         }
-        lstResult.add(asset);
+        lstResult.add(0.0);
         lstResult.add(dream);
         lstResult.add(basket);
         lstResult.add(debt);
