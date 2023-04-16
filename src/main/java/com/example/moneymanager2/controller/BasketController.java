@@ -68,6 +68,7 @@ public class BasketController {
             transactionSent.setNote("Chuyển tiền : "+basketReceive.getName());
             transactionSent.setUserId(request.getUserId());
             transactionSent.setTypeBasket(basketSent.getType());
+            transactionSent.setNameBasket(basketSent.getName());
 
             Transaction transactionReceive = new Transaction();
             transactionReceive.setBasketId(request.getReceiveBasketId());
@@ -77,6 +78,7 @@ public class BasketController {
             transactionReceive.setNote("Nhận tiền : "+basketSent.getName());
             transactionReceive.setUserId(request.getUserId());
             transactionReceive.setTypeBasket(basketReceive.getType());
+            transactionReceive.setNameBasket(basketReceive.getName());
 
             transactionService.save(transactionReceive);
             transactionService.save(transactionSent);

@@ -3,6 +3,7 @@ package com.example.moneymanager2.service;
 import com.example.moneymanager2.model.Basket;
 import com.example.moneymanager2.model.Transaction;
 import com.example.moneymanager2.model.User;
+import com.example.moneymanager2.repository.BasketRepository;
 import com.example.moneymanager2.repository.TransactionRepositoty;
 import com.example.moneymanager2.request.SearchTransactionFromDateToDate;
 import com.example.moneymanager2.util.UtilService;
@@ -21,6 +22,8 @@ public class TransactionService {
 
     @Autowired
     private TransactionRepositoty transactionRepositoty;
+    @Autowired
+    private BasketRepository basketRepository;
 
     public boolean save(Transaction transaction){
         try{
@@ -138,7 +141,7 @@ public class TransactionService {
                 LocalDateTime dateStartOfWeek2 = LocalDate.of(searchTransactionFromDateToDate.getYear(), searchTransactionFromDateToDate.getMonth(),8).atStartOfDay();
                 LocalDateTime dateEndOfWeek2 = LocalTime.MAX.atDate(LocalDate.of(searchTransactionFromDateToDate.getYear(), searchTransactionFromDateToDate.getMonth(),14));
                 LocalDateTime dateStartOfWeek3 = LocalDate.of(searchTransactionFromDateToDate.getYear(), searchTransactionFromDateToDate.getMonth(),15).atStartOfDay();
-                LocalDateTime dateEndOfWeek3 = LocalTime.MAX.atDate(LocalDate.of(searchTransactionFromDateToDate.getYear(), searchTransactionFromDateToDate.getMonth()-1,21));
+                LocalDateTime dateEndOfWeek3 = LocalTime.MAX.atDate(LocalDate.of(searchTransactionFromDateToDate.getYear(), searchTransactionFromDateToDate.getMonth(),21));
                 LocalDateTime dateStartOfWeek4 = LocalDate.of(searchTransactionFromDateToDate.getYear(), searchTransactionFromDateToDate.getMonth(),22).atStartOfDay();
                 LocalDate lastDayOfMonthDate  = dateSta.withDayOfMonth(
                         dateSta.getMonth().length(dateSta.isLeapYear()));
@@ -210,5 +213,15 @@ public class TransactionService {
         return dateToConvert.toInstant()
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime();
+    }
+    public void updateTransaction(){
+        List<Transaction> lst = transactionRepositoty.findAll();
+        for (Transaction item : lst){
+            Basket basket = basketRepository.findById(item.getBasketId()).get();
+            if(!Objects.isNull(basket)){
+                item.setNameBasket(basket.getName());
+                transactionRepositoty.save(item);
+            }
+        }
     }
 }

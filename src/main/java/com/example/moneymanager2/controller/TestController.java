@@ -17,9 +17,10 @@ public class TestController {
 
     @GetMapping("/test")
     public String test(){
-        LocalDate date = LocalDate.of(2023, 3, 28);
-        int weekOfYear = date.get(ChronoField.ALIGNED_WEEK_OF_YEAR);
-        System.out.println("==================="+weekOfYear);
+        transactionService.updateTransaction();
+//        LocalDate date = LocalDate.of(2023, 3, 28);
+//        int weekOfYear = date.get(ChronoField.ALIGNED_WEEK_OF_YEAR);
+//        System.out.println("==================="+weekOfYear);
 //        List<Transaction> lst = transactionService.findAll(); 1 8 15 22
 //        Transaction transaction = lst.get(0);
 //        LocalDate currentDate = convertToLocalDateViaInstant(transaction.getCreateDate());
