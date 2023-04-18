@@ -169,6 +169,7 @@ public class BasketService {
                 transaction.setCreateDate(request.getCreatedDate());
                 transaction.setType(1);
                 transaction.setUserId(request.getUserId());
+                transaction.setNameBasket(basket.getName());
                 transactionRepositoty.save(transaction);
             }
             return true;
