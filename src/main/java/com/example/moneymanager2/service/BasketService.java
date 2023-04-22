@@ -26,9 +26,6 @@ public class BasketService {
     @Autowired
     private TransactionService transactionService;
 
-    @Autowired
-    private BasketService basketService;
-
     public boolean save(Basket basket){
         try{
             basketRepository.save(basket);
@@ -161,15 +158,15 @@ public class BasketService {
         basketEx.setPrecent(basket.getPrecent());
         basketEx.setTotalIncome(basket.getTotalIncome());
         basketEx.setTotalSpending(basket.getTotalSpending());
-        basketService.update(basket);
+        update(basket);
         return basket;
     }
 
     public boolean delete(String id){
-        Basket basket = basketService.findById(id);
+        Basket basket = findById(id);
         List<Transaction> transactions = transactionService.findAllByBasketId(id);
         try {
-            basketService.delete(basket);
+            delete(basket);
             if(!CollectionUtils.isEmpty(transactions)){
                 for (Transaction transaction : transactions) {
                     transactionService.delete(transaction);
@@ -199,16 +196,16 @@ public class BasketService {
 
     public boolean transferMoney(TranferMoneyRequest request){
         try {
-            Basket basketSent = basketService.findById(request.getSentBasketId());
-            Basket basketReceive = basketService.findById(request.getReceiveBasketId());
+            Basket basketSent = findById(request.getSentBasketId());
+            Basket basketReceive = findById(request.getReceiveBasketId());
 
             basketSent.setTotalSpending(basketSent.getTotalSpending() + request.getMoney());
             basketSent.setAvailableBalances(basketSent.getTotalIncome() - basketSent.getTotalSpending());
-            basketService.save(basketSent);
+            save(basketSent);
 
             basketReceive.setTotalIncome(basketReceive.getTotalIncome() + request.getMoney());
             basketReceive.setAvailableBalances(basketReceive.getTotalIncome() - basketReceive.getTotalSpending());
-            basketService.save(basketReceive);
+            save(basketReceive);
 
             Transaction transactionSent = new Transaction();
             transactionSent.setBasketId(request.getSentBasketId());
