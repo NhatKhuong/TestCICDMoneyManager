@@ -38,9 +38,13 @@ public class UserService {
         return user;
     }
 
-    public boolean Update(User user){
+    public boolean update(String id, User user){
         try{
-            userRepository.save(user);
+            User userEx = findById(id);
+            userEx.setName(user.getName());
+            userEx.setEmail(user.getEmail());
+            userEx.setUrlPic(user.getUrlPic());
+            userRepository.save(userEx);
             return true;
         }catch (Exception e){
             e.printStackTrace();

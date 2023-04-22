@@ -7,15 +7,14 @@ import com.example.moneymanager2.repository.BasketRepository;
 import com.example.moneymanager2.repository.TransactionRepositoty;
 import com.example.moneymanager2.request.DistributeMoneyRequest;
 import com.example.moneymanager2.request.SearchBasketByTimeRequest;
+import com.example.moneymanager2.request.TranferMoneyRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class BasketService {
@@ -27,6 +26,9 @@ public class BasketService {
     @Autowired
     private TransactionService transactionService;
 
+    @Autowired
+    private BasketService basketService;
+
     public boolean save(Basket basket){
         try{
             basketRepository.save(basket);
@@ -37,17 +39,17 @@ public class BasketService {
         }
     }
 
-    public String createListBasket(List<Basket> lstBasket){
-        try {
-            for (Basket basket : lstBasket) {
-                save(basket);
-            }
-            return "save success";
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-        return "fail";
-    }
+//    public String createListBasket(List<Basket> lstBasket){
+//        try {
+//            for (Basket basket : lstBasket) {
+//                save(basket);
+//            }
+//            return "save success";
+//        } catch (Exception e){
+//            e.printStackTrace();
+//        }
+//        return "fail";
+//    }
 
     public boolean delete(Basket basket){
         try{
@@ -150,6 +152,92 @@ public class BasketService {
         }
         return "update fail";
 
+    }
+
+    public Basket update(String id, Basket basket){
+        Basket basketEx = findById(id);
+        basketEx.setName(basket.getName());
+        basketEx.setAvailableBalances(basket.getAvailableBalances());
+        basketEx.setPrecent(basket.getPrecent());
+        basketEx.setTotalIncome(basket.getTotalIncome());
+        basketEx.setTotalSpending(basket.getTotalSpending());
+        basketService.update(basket);
+        return basket;
+    }
+
+    public boolean delete(String id){
+        Basket basket = basketService.findById(id);
+        List<Transaction> transactions = transactionService.findAllByBasketId(id);
+        try {
+            basketService.delete(basket);
+            if(!CollectionUtils.isEmpty(transactions)){
+                for (Transaction transaction : transactions) {
+                    transactionService.delete(transaction);
+                }
+            }
+            return true;
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public List<Basket> createListBasket(List<Basket> lstBasket){
+        try {
+            for (Basket basket : lstBasket) {
+                if(Objects.isNull(basket.getId())){
+                    basket.setId(UUID.randomUUID().toString());
+                }
+                save(basket);
+            }
+            return lstBasket;
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean transferMoney(TranferMoneyRequest request){
+        try {
+            Basket basketSent = basketService.findById(request.getSentBasketId());
+            Basket basketReceive = basketService.findById(request.getReceiveBasketId());
+
+            basketSent.setTotalSpending(basketSent.getTotalSpending() + request.getMoney());
+            basketSent.setAvailableBalances(basketSent.getTotalIncome() - basketSent.getTotalSpending());
+            basketService.save(basketSent);
+
+            basketReceive.setTotalIncome(basketReceive.getTotalIncome() + request.getMoney());
+            basketReceive.setAvailableBalances(basketReceive.getTotalIncome() - basketReceive.getTotalSpending());
+            basketService.save(basketReceive);
+
+            Transaction transactionSent = new Transaction();
+            transactionSent.setBasketId(request.getSentBasketId());
+            transactionSent.setCreateDate(request.getCreatedDate());
+            transactionSent.setMoneyTransaction(request.getMoney());
+            transactionSent.setType(-1);
+            transactionSent.setNote(request.getNote());
+            transactionSent.setUserId(request.getUserId());
+            transactionSent.setTypeBasket(basketSent.getType());
+            transactionSent.setNameBasket(basketSent.getName());
+
+            Transaction transactionReceive = new Transaction();
+            transactionReceive.setBasketId(request.getReceiveBasketId());
+            transactionReceive.setCreateDate(request.getCreatedDate());
+            transactionReceive.setMoneyTransaction(request.getMoney());
+            transactionReceive.setType(1);
+            transactionReceive.setNote(request.getNote());
+            transactionReceive.setUserId(request.getUserId());
+            transactionReceive.setTypeBasket(basketReceive.getType());
+            transactionReceive.setNameBasket(basketReceive.getName());
+
+            transactionService.save(transactionReceive);
+            transactionService.save(transactionSent);
+            return true;
+        } catch (Exception e){
+            e.printStackTrace();
+
+        }
+        return false;
     }
 
     public boolean distributeMoneyIntoBasket(DistributeMoneyRequest request){

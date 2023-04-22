@@ -37,14 +37,15 @@ public class TransactionController {
 
     @PutMapping("/{id}")
     public Transaction update(@PathVariable("id") String id, @RequestBody Transaction transaction){
-        Transaction transactionEx = findById(id);
-        transactionEx.setMoneyTransaction(transaction.getMoneyTransaction());
-        transactionEx.setBasketId(transaction.getBasketId());
-        transactionEx.setCreateDate(transaction.getCreateDate());
-        transactionEx.setNote(transaction.getNote());
-        transactionEx.setType(transaction.getType());
-        transactionService.update(transactionEx);
-        return transactionEx;
+//        Transaction transactionEx = findById(id);
+//        transactionEx.setMoneyTransaction(transaction.getMoneyTransaction());
+//        transactionEx.setBasketId(transaction.getBasketId());
+//        transactionEx.setCreateDate(transaction.getCreateDate());
+//        transactionEx.setNote(transaction.getNote());
+//        transactionEx.setType(transaction.getType());
+//        transactionService.update(transactionEx);
+//        return transactionEx;
+        return transactionService.update(id,transaction);
     }
     @PostMapping("/get-all-by-userId-and-type-and-type-basket")
     public List<Transaction> findAllByUserIdAndTypeAndTypeBasket(@RequestBody SearchTransactionFromDateToDate request){

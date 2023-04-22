@@ -50,13 +50,19 @@ public class TransactionService {
         return transaction;
     }
 
-    public boolean update(Transaction transaction){
+    public Transaction update(String id ,Transaction transaction){
         try{
-            transactionRepositoty.save(transaction);
-            return true;
+            Transaction transactionEx = findById(id);
+            transactionEx.setMoneyTransaction(transaction.getMoneyTransaction());
+            transactionEx.setBasketId(transaction.getBasketId());
+            transactionEx.setCreateDate(transaction.getCreateDate());
+            transactionEx.setNote(transaction.getNote());
+            transactionEx.setType(transaction.getType());
+            transactionRepositoty.save(transactionEx);
+            return transactionEx;
         }catch (Exception e){
             e.printStackTrace();
-            return false;
+            return null;
         }
     }
 
