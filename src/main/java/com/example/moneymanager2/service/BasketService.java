@@ -216,6 +216,7 @@ public class BasketService {
             transactionSent.setUserId(request.getUserId());
             transactionSent.setTypeBasket(basketSent.getType());
             transactionSent.setNameBasket(basketSent.getName());
+            transactionSent.setIsTransfer(true);
 
             Transaction transactionReceive = new Transaction();
             transactionReceive.setBasketId(request.getReceiveBasketId());
@@ -226,6 +227,7 @@ public class BasketService {
             transactionReceive.setUserId(request.getUserId());
             transactionReceive.setTypeBasket(basketReceive.getType());
             transactionReceive.setNameBasket(basketReceive.getName());
+            transactionReceive.setIsTransfer(true);
 
             transactionService.save(transactionReceive);
             transactionService.save(transactionSent);

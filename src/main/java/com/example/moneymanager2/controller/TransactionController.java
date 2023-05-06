@@ -52,6 +52,11 @@ public class TransactionController {
         return transactionService.findAllByUserIdAndTypeAndTypeBasketAndCreateDateBetween(request);
     }
 
+    @PostMapping("/get-value-toltal-income-tranferMoney")
+    public Double getListValueToltalTranferMoney(@RequestBody SearchTransactionFromDateToDate request){
+        return transactionService.getToltalMoneyTranfer(request);
+    }
+
     @GetMapping("/get-all-by-userId-and-basketId/{userId}/{basketId}")
     public List<Transaction> findAllByUserId(@PathVariable("userId") String userId, @PathVariable("basketId") String basketId){
         return transactionService.findAllByUserIdAndBasketId(userId,basketId);

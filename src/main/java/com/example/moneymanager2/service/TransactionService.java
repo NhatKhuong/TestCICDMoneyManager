@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.time.*;
 import java.time.temporal.ChronoField;
@@ -95,6 +96,24 @@ public class TransactionService {
                 return transactionRepositoty.findAllByUserIdAndTypeInAndBasketIdAndCreateDateBetween(request.getUserId(), Arrays.asList(request.getType()), request.getBasketId(),dateStart, dateEnd, pageable);
             }
         }
+    }
+
+    public Double getToltalMoneyTranfer(SearchTransactionFromDateToDate request){
+        Pageable pageable = UtilService.convertPageableAndSort(request.getPageNumber(), request.getPageSize(), request.getSort());
+        LocalDate localDate = LocalDate.of(request.getYear(),request.getMonth(),1);
+        Date dateStart = UtilService.atStartOfDay(Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        LocalDate dateEndLocal = localDate.withDayOfMonth(localDate.getMonth().length(localDate.isLeapYear()));
+        Date dateEnd = UtilService.setDateEndDay(Date.from(dateEndLocal.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        List<Transaction> list = transactionRepositoty.findAllByUserIdAndTypeInAndTypeBasketAndCreateDateBetween(request.getUserId(), Arrays.asList(1), request.getTypeBasket(),dateStart, dateEnd, pageable);
+        Double toltalValueIncomeTransfer = 0.0;
+        if(!CollectionUtils.isEmpty(list)){
+            for (Transaction item : list) {
+                if(!Objects.isNull(item.getIsTransfer()) && Boolean.TRUE.equals(item.getIsTransfer())){
+                    toltalValueIncomeTransfer = toltalValueIncomeTransfer + item.getMoneyTransaction();
+                }
+            }
+        }
+        return toltalValueIncomeTransfer;
     }
 
     public List<Transaction> findAllByBasketId(String basketId) {
