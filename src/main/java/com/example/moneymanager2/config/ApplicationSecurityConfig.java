@@ -38,7 +38,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.headers().frameOptions().disable();
 
-//        http.cors().and().csrf().disable()
+//        http.cors().and().csrf().disable() ff
 //                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 //                .authorizeRequests().antMatchers("/api/**").permitAll()
 //                .anyRequest().authenticated();
