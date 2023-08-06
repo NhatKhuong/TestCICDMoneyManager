@@ -13,7 +13,6 @@ public class TestController {
 
     @GetMapping("/test")
     public String test(){
-//        transactionService.updateTransaction();
 //        LocalDate date = LocalDate.of(2023, 3, 28);
 //        int weekOfYear = date.get(ChronoField.ALIGNED_WEEK_OF_YEAR);
 //        System.out.println("==================="+weekOfYear);
