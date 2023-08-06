@@ -44,6 +44,7 @@ jobs:
             docker stop be-web
             docker rm be-web
             docker rmi nhatkhuong/money-manager-container:latest
+            docker pull nhatkhuong/money-manager-container:latest
             docker run -d -p 8080:8080 --name be-web nhatkhuong/money-manager-container:latest
  
 
