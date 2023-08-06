@@ -108,18 +108,6 @@ public class BasketController {
     @DeleteMapping("/{id}")
     public String delete(@PathVariable("id") String id){
         return basketService.delete(id) ? "delete success" : "delete fail";
-//        Basket basket = basketService.findById(id);
-//        List<Transaction> transactions = transactionService.findAllByBasketId(id);
-//        try {
-//            basketService.delete(basket);
-//            for (Transaction transaction : transactions) {
-//                transactionService.delete(transaction);
-//            }
-//            return  "delete success";
-//        } catch (Exception e){
-//            e.printStackTrace();
-//        }
-//        return "delete fail";
     }
 
     @PutMapping("/{id}")

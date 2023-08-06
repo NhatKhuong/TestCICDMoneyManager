@@ -33,11 +33,6 @@ public class UserController {
     @PutMapping("/{id}")
     public boolean update(@PathVariable("id") String id, @RequestBody User user){
         return userService.update(id, user);
-//        User userEx = findById(id);
-//        userEx.setName(user.getName());
-//        userEx.setEmail(user.getEmail());
-//        userEx.setUrlPic(user.getUrlPic());
-//        return userService.Update(userEx);
     }
 
     @DeleteMapping("/{id}")
